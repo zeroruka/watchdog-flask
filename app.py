@@ -16,12 +16,12 @@ app = Flask(__name__)
 api = Api(app, errors=errors)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-cors = CORS(app)
+cors = CORS(app, resources={r"/v1/*": {"origins": "*"}})
 
 app.config.from_envvar('ENV_FILE_LOCATION')  # JWT_SECRET_KEY
 db.init_app(app)
 
-api_prefix = '/api'
+api_prefix = '/v1'
 endpoints = {
     'Url': '/scraper/',
     'Listing': '/listings/',
