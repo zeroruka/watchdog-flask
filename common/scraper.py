@@ -132,7 +132,7 @@ def setup_logging():
     # Setup logging
     config = {
         'handlers': [
-            {'sink': sys.stdout, 'colorize': True, 'level': 'DEBUG'},
+            {'sink': sys.stdout, 'colorize': True, 'level': 'INFO'},
         ]
     }
     logger.configure(**config)

@@ -8,8 +8,8 @@ from common.errors import errors
 from common.models import db
 from resources.auth import UserRegistration, UserLogin, ChangePassword, ChangeChatId, GetUserProfile, DeleteUser
 from resources.control import Control
-from resources.listings import Listing, ResetListingsDB
-from resources.admin import GetAllUsers, GetAllListings, AdminDeleteUser, AdminStartAllScraper
+from resources.listings import Listing
+from resources.admin import GetAllUsers, GetAllListings, AdminDeleteUser, AdminStartAllScraper, GetAllUrls
 from resources.url import Url
 
 app = Flask(__name__)
@@ -31,12 +31,12 @@ endpoints = {
     'ChangePassword': '/change-password/',
     'GetUserProfile': '/get-user-profile/',
     'ChangeChatId': '/change-chat-id/',
-    'ResetListingsDB': '/reset-listings-db/',
     'DeleteUser': '/goodbye/',
     'GetAllUsers': '/admin/get-all-users/',
     'GetAllListings': '/admin/get-all-listings/',
     'AdminDeleteUser': '/admin/delete-user/',
     'AdminStartAllScraper': '/admin/start-all-scrapers/',
+    'GetAllUrls': '/admin/get-all-urls/',
 }
 
 for endpoint, path in endpoints.items():

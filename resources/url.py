@@ -9,7 +9,6 @@ url_put_args = reqparse.RequestParser()
 url_put_args.add_argument("name", type=str, help="Name of the url")
 url_put_args.add_argument("url", type=str, help="Url is required", required=True)
 
-
 class Url(Resource):
     @jwt_required()
     def get(self):  # Get all urls
