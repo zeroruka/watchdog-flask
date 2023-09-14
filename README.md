@@ -59,7 +59,10 @@ export ENV_FILE_LOCATION=/path/to/your/`.env`
 
 Replace /path/to/your/`.env` with the actual path to your `.env` file.
 
-5. Now you can run the application with the command python start.py. The application will start on 0.0.0.0 and port 5123.
+5. This project uses Poetry as the virtual environment manager. You can install Poetry by following the instructions [here](https://python-poetry.org/docs/#installation).
+6. Run `poetry install` to install the dependencies.
+7. Enter the virtual environment with `poetry shell`.
+8. Now you can run the application with the command `python start.py`. The application will start on `0.0.0.0` and port `5123`.
 
 ## Future Work
 

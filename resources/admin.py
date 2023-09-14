@@ -40,7 +40,7 @@ class GetAllListings(Resource):
             username = user.username
             serialized_listings[f"{username}_{userid}"] = {}
             for listing in listings:
-                if listing.added_by.first().id == userid:
+                if listing.added_by and getattr(listing.added_by.first(), 'id', None) == userid:
                     serialized_listings[f"{username}_{userid}"].update(
                         listing.serialize())
         return serialized_listings
@@ -62,7 +62,7 @@ class GetAllUrls(Resource):
             username = user.username
             serialized_urls[f"{username}_{userid}"] = {}
             for url in urls:
-                if url.added_by[0].id == userid:
+                if url.added_by and getattr(url.added_by[0], 'id', None) == userid:
                     serialized_urls[f"{username}_{userid}"].update(
                         url.serialize())
         return serialized_urls
