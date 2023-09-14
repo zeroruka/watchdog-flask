@@ -33,7 +33,7 @@ The project uses several Python libraries, which are listed in the pyproject.tom
 
 ## Testing
 
-The application includes unit tests, which are located in the tests/ directory. The tests cover user registration, login, URL management, and scraper control.
+The application includes unit tests, which are located in the tests/ directory. The tests cover user registration, login, URL management, and scraper control. (tests may be outdated)
 
 ## Running the Application
 
@@ -51,7 +51,10 @@ SQLALCHEMY_DATABASE_URI=your_database_url
 Replace your_telegram_bot_token, your_jwt_secret_key, and your_database_url with your actual Telegram bot token, JWT secret key, and database URL respectively.
 
 3. Save and close the `.env` file.
-4. Now, you need to tell Flask where to find your `.env` file. You can do this by setting the `ENV_FILE_LOCATION` environment variable to the path of your `.env` file. If you're using a Unix-based system like Linux or macOS, you can do this in the terminal:
+4. This project uses Poetry as the virtual environment manager. You can install Poetry by following the instructions [here](https://python-poetry.org/docs/#installation).
+5. Run `poetry install` to install the dependencies.
+6. Enter the virtual environment with `poetry shell`.
+7. Now, you need to tell Flask where to find your `.env` file. You can do this by setting the `ENV_FILE_LOCATION` environment variable to the path of your `.env` file. If you're using a Unix-based system like Linux or macOS, you can do this in the terminal:
 
 ```bash
 export ENV_FILE_LOCATION=/path/to/your/`.env`
@@ -59,10 +62,8 @@ export ENV_FILE_LOCATION=/path/to/your/`.env`
 
 Replace /path/to/your/`.env` with the actual path to your `.env` file.
 
-5. This project uses Poetry as the virtual environment manager. You can install Poetry by following the instructions [here](https://python-poetry.org/docs/#installation).
-6. Run `poetry install` to install the dependencies.
-7. Enter the virtual environment with `poetry shell`.
-8. Now you can run the application with the command `python start.py`. The application will start on `0.0.0.0` and port `5123`.
+8. Now you have to initalise the database, only do this step if there isn't already a database file in the instance folder. Run `flask shell`, and then run `db.create_all()` to initalise the database.
+9. Now you can run the application with the command `python start.py`. The application will start on `0.0.0.0` and port `5123`.
 
 ## Future Work
 
