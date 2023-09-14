@@ -7,14 +7,17 @@ from common.models import UrlModel, db, UserModel
 # URL Arguments
 url_put_args = reqparse.RequestParser()
 url_put_args.add_argument("name", type=str, help="Name of the url")
-url_put_args.add_argument("url", type=str, help="Url is required", required=True)
+url_put_args.add_argument(
+    "url", type=str, help="Url is required", required=True)
+
 
 class Url(Resource):
     @jwt_required()
     def get(self):  # Get all urls
         try:
             user_id = get_jwt_identity()  # Get user id from JWT
-            user = UserModel.query.filter_by(id=user_id).first()  # Get user from database
+            user = UserModel.query.filter_by(
+                id=user_id).first()  # Get user from database
             urls = user.urls  # Get all urls for user
             urls = [url.serialize() for url in urls]  # Serialize urls
             serialized_urls = {}
@@ -39,13 +42,14 @@ class Url(Resource):
             url = url.replace(" ", "+")
             url = f"https://www.ebay.com.sg/sch/i.html?_from=R40&_nkw={url}&_sacat=0&_sop=10&_ipg=120"
 
-            result = user.urls.filter(UrlModel.url == url).first()  # Check if url already exists
+            # Check if url already exists
+            result = user.urls.filter(UrlModel.url == url).first()
             if result:
                 raise UrlAlreadyExistsError
             url = UrlModel(name=args['name'], url=url)  # Create new url
             db.session.add(url)  # Add url to database
             user.urls.append(url)  # Add relation between user and url
-            db.session.commit()  # Commit changes to database
+            db.session.commit()
             return {"message": f"Successfully added {url}"}, 201
         except AttributeError:
             raise UserDoesNotExistError

@@ -5,6 +5,17 @@ db = SQLAlchemy()
 
 
 class UserModel(db.Model):
+    """
+    Raw SQL:
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY,
+            username VARCHAR(100) NOT NULL UNIQUE,
+            password VARCHAR(100) NOT NULL,
+            scraper_status BOOLEAN NOT NULL DEFAULT FALSE,
+            admin BOOLEAN NOT NULL DEFAULT FALSE,
+            chat_id INTEGER
+        );
+    """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
@@ -13,8 +24,10 @@ class UserModel(db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     chat_id = db.Column(db.Integer, nullable=True)  # Telegram chat id
 
-    listings = db.relationship('ListingsModel', secondary='user_listings', back_populates='added_by', lazy='dynamic')
-    urls = db.relationship('UrlModel', secondary='user_urls', backref='added_by', lazy='dynamic')
+    listings = db.relationship(
+        'ListingsModel', secondary='user_listings', back_populates='added_by', lazy='dynamic')
+    urls = db.relationship('UrlModel', secondary='user_urls',
+                           backref='added_by', lazy='dynamic')
 
     def hash_password(self):
         self.password = generate_password_hash(self.password).decode('utf8')
@@ -45,6 +58,24 @@ class UserModel(db.Model):
 
 
 class ListingsModel(db.Model):
+    """
+    Raw SQL:
+        CREATE TABLE listings (
+            id INTEGER PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            price VARCHAR(20) NOT NULL,
+            url VARCHAR(100) NOT NULL,
+            thumbnail VARCHAR(100) NOT NULL,
+            source VARCHAR(100) NOT NULL,
+            date DATE NOT NULL,
+            new BOOLEAN,
+            seller VARCHAR(100),
+            seller_items_sold INTEGER,
+            seller_rating VARCHAR(10),
+            origin_country VARCHAR(100),
+            postage_fee VARCHAR(100)
+        );
+    """
     __tablename__ = 'listings'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -64,7 +95,8 @@ class ListingsModel(db.Model):
     origin_country = db.Column(db.String(100), nullable=True)
     postage_fee = db.Column(db.String(100), nullable=True)
 
-    added_by = db.relationship('UserModel', secondary='user_listings', back_populates='listings', lazy='dynamic')
+    added_by = db.relationship(
+        'UserModel', secondary='user_listings', back_populates='listings', lazy='dynamic')
 
     def serialize(self):
         return {
@@ -95,6 +127,14 @@ class ListingsModel(db.Model):
 
 
 class UrlModel(db.Model):
+    """ 
+    Raw SQL:
+        CREATE TABLE urls (
+            id INTEGER PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            url VARCHAR(200)
+        );
+    """
     __tablename__ = 'urls'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -113,13 +153,38 @@ class UrlModel(db.Model):
         return f"Url(id = {self.id} name = {self.name}, url = {self.url})"
 
 
+# Secondary table to map the many-to-many relationship between users and listings.
+"""
+Raw SQL:
+    CREATE TABLE user_listings (
+        user_id INTEGER,
+        listing_id INTEGER,
+        PRIMARY KEY (user_id, listing_id),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (listing_id) REFERENCES listings(id)
+    );
+"""
 user_listings = db.Table('user_listings',
-                         db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-                         db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True)
+                         db.Column('user_id', db.Integer, db.ForeignKey(
+                             'users.id'), primary_key=True),
+                         db.Column('listing_id', db.Integer, db.ForeignKey(
+                             'listings.id'), primary_key=True)
                          )
 
-# Secondary table to map the relationships between users and urls
+# Secondary table to map the many-to-many relationships between users and urls
+""" 
+Raw SQL:
+    CREATE TABLE user_urls (
+        user_id INTEGER,
+        url_id INTEGER,
+        PRIMARY KEY (user_id, url_id),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (url_id) REFERENCES urls(id)
+    );
+"""
 user_urls = db.Table('user_urls',
-                     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-                     db.Column('url_id', db.Integer, db.ForeignKey('urls.id'), primary_key=True)
+                     db.Column('user_id', db.Integer, db.ForeignKey(
+                         'users.id'), primary_key=True),
+                     db.Column('url_id', db.Integer, db.ForeignKey(
+                         'urls.id'), primary_key=True)
                      )

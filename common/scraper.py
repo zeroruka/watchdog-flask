@@ -57,10 +57,12 @@ def get_attr(soup, index):
     _id = url.split('/')[-1]
     thumbnail_image = soup.find_all(
         'div', {'class': 's-item__image-wrapper'})[index].find('img').get('src')  # Low resolution image
-    source_image = thumbnail_image.replace('s-l225', 's-l800')  # High resolution image
+    source_image = thumbnail_image.replace(
+        's-l225', 's-l800')  # High resolution image
 
     try:  # Some listings don't have a status
-        status = soup.find_all('span', {'class': 'SECONDARY_INFO'})[index].text.strip()
+        status = soup.find_all('span', {'class': 'SECONDARY_INFO'})[
+            index].text.strip()
         new = True
         if status == 'Pre-Owned':  # There can only be 2 statuses, 'Brand New' or 'Pre-Owned'
             new = False
@@ -80,7 +82,8 @@ def get_attr(soup, index):
         postage_fee = None
 
     try:
-        seller_info = soup.find_all('span', {'class': 's-item__seller-info-text'})[index - 1].text.strip()
+        seller_info = soup.find_all(
+            'span', {'class': 's-item__seller-info-text'})[index - 1].text.strip()
     except IndexError:
         seller_info = None
 
@@ -205,6 +208,7 @@ def scraper(user_id) -> None:
                     f"New listing for {url.name} found! URL: {data['url']}")
                 sleep(2)
             except IntegrityError:
+                # Listing already exists in database, rollback
                 db.session.rollback()
 
 
