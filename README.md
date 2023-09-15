@@ -60,7 +60,13 @@ Replace your_telegram_bot_token, your_jwt_secret_key, and your_database_url with
 export ENV_FILE_LOCATION=/path/to/your/`.env`
 ```
 
-Replace /path/to/your/`.env` with the actual path to your `.env` file.
+If you're using Windows, you can do this in the Command Prompt:
+
+```cmd
+setx ENV_FILE_LOCATION C:\path\to\your\.env
+```
+
+Replace `/path/to/your/.env` or `C:\path\to\your\.env` with the actual path to your `.env` file.
 
 8. Now you have to initalise the database, only do this step if there isn't already a database file in the instance folder. Run `flask shell`, and then run `db.create_all()` to initalise the database.
 9. Now you can run the application with the command `python start.py`. The application will start on `0.0.0.0` and port `5123`.
